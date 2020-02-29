@@ -1,4 +1,4 @@
-# small rpg battle script by asap (sudo-asap, a_s_a_p)
+# small rpg battle script by asap (a_s_a_p)
 
 from random import choice
 
@@ -40,7 +40,7 @@ while mobhp > 0:
             print(mob, "has", mobhp, "health")
         if xx == str('y'):
             if skillpts < skillptsmax:
-                skillpts =+ 1
+                skillpts = skillpts + 1
                 print("You have defended and gained a skill point")
                 print("You now have", skillpts, "\'skill\' points")
                 print(mob, "has", mobhp, "health")
