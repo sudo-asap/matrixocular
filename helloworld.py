@@ -1,11 +1,8 @@
-# small rpg battle script by asap (a_s_a_p)
+# small rpg battle script by sudo-asap
 
 from random import choice
 
 from random import randint
-
-def function(skillet):
-    skilldamage = randint(0, 3) + randint(0, 3) + randint(0, 4) * skillet
 
 weapondamage = 0
 baseattack = randint(0, 3) + randint(0, 3) + randint(0, 4)
@@ -18,16 +15,17 @@ skillpoints = 0
 skillpts = skillpoints
 skillpointsmax = 4
 skillptsmax = skillpointsmax
-skilldamage = (randint(0, 3) + randint(0, 3) + randint(0, 4)) * skillpts
+skilldamage = (randint(1, 3) + randint(1, 3) + randint(1, 4)) * skillpts
 skilldmg = skilldamage
 
 # (skillpoints * playerattack + skillwep) + (skillpoints * 2)
 
-moblist = ["slimeball", "dark blaze", "mud life", "crondor", "pumpkin head", "lizard boss"]
+moblist = ["Slimeball", "Dark Blaze", "Mud Life", "Crondor", "Pumpkin Head", "Lizard Boss"]
+moblistb = ["Trickador", "Everclear"]
 mob = choice(moblist)
 print("You have met an", mob)
 
-mobhealth = 40
+mobhealth = 45
 mobhp = mobhealth
 
 while mobhp > 0:
@@ -35,13 +33,14 @@ while mobhp > 0:
     if xx in ['x', 'y', 'z']:
         if xx == str('x'):
             mobhp = mobhp - playeratk
-            print("Player attacked", mob, "for", playeratk, "damage")
+            print("Player attacked", mob, "for", str(playeratk), "damage")
             playeratk = randint(0, 3) + randint(0, 3) + randint(0, 4) + weapondamage
-            print(mob, "has", mobhp, "health")
+            print(mob, "has", str(mobhp), "health")
         if xx == str('y'):
             if skillpts < skillptsmax:
                 skillpts = skillpts + 1
                 print("You have defended and gained a skill point")
+                mobhp = mobhp
                 print("You now have", skillpts, "\'skill\' points")
                 print(mob, "has", mobhp, "health")
             elif skillpts == skillptsmax:
@@ -52,18 +51,17 @@ while mobhp > 0:
                 print("\'skill\' points too high")
                 break
         if xx == str('z'):
-            if skillpts > 0 and skillpts <= skillptsmax:
-                print("You attacked", mob, "for", skilldmg, "damage with", skillpts, "\'skill\' points")
-                mobhp = mobhp - skilldmg
+            if skillpts > 0:
                 skilldmg, skillpts = (randint(0, 3) + randint(0, 3) + randint(0, 4)) * skillpts, 0
+                print("~", skilldmg)
+                print("You attacked", mob, "for", skilldmg, "damage")
+                mobhp = mobhp - skilldmg
+                print("~", skilldmg)
                 print(mob, "has", mobhp, "health")
                 print("You now have", skillpts, "\'skill\' points")
             elif skillpts == 0:
                 print("Oops! You have", skillpts, "\'skill\' points")
                 print("Nothing happened")
-            else:
-                print("\'skill\' points out of bounds")
-                break
     else:
         print("typed something else other than x, y, z")
-        
+        break
