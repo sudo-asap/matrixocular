@@ -1,4 +1,5 @@
 # small rpg battle script by sudo-asap
+ # on github: https://github.com/sudo-asap/matrixocular
 
 from random import choice
 
