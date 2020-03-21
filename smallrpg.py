@@ -54,7 +54,7 @@ equip = equipment
 
 gamemode = "/gamemode", "on"
 
-moblist = ["Dark Blaze", "Crondor", "Trickador", "Everclear", "Denozor", "Frankenstein", "Deadly Kin", "Olazapi"]
+moblist = ["Dark Beast", "Vampire",]
 mob = choice(moblist)
 
 if mob[0] in ['A', 'E', 'I', 'O', 'U']:
@@ -110,7 +110,6 @@ while playerhp > 0:
 #               print("~", skilldmg)
                 print("You attacked " + str(mob), "for " + str(skilldmg), "damage")
                 mobhp = mobhp - skilldmg
-                skillpts = 0
 # debugging skilldmg
 #               print("~", skilldmg)
                 print(str(mob), "has " + str(mobhp), "health")
