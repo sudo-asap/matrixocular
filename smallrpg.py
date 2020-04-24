@@ -1,132 +1,171 @@
 # small rpg battle script by sudo-asap
  # on github: https://github.com/sudo-asap/matrixocular
 # created from an android phone
+# currently working version
 
 from random import choice
 
 from random import randint
 
 weapondamage = 0
-weapondmg = weapondamage
-playerattack = randint(1, 20) + randint(1, 20) + randint(1, 30) + weapondmg
+playerattack = randint(5,30) + randint(5,30) + weapondamage
 playeratk = playerattack
 skillweapondamage = 0
-skillweapondmg = skillweapondamage
 skillpoints = 0
 skillpts = skillpoints
 skillpointsmax = 4
 skillptsmax = skillpointsmax
-skilldamage = (randint(1, 20) + randint(1, 20) + randint(1, 30)) * (skillpts + 1) + skillweapondmg
+skilldamage = (randint(1,30) + randint(1,30) + randint(1,30)) * (skillpts + 1) + skillweapondamage
 skilldmg = skilldamage
 playerhealthpoints = 1000
 playerhp = playerhealthpoints
-mobattack = randint(20, 100)
+# player hp is soft-capped
+mobattack = randint(1,20) + randint(1,20) + randint(2,20)
 mobatk = mobattack
 mobhealth = 150
 mobhp = mobhealth
-playermiss = randint(1,100)
 defendpercent = .2
-defend = round(mobatk*defendpercent)
-dfnd = defend
-playermisspercent = 7
+defendedattack = round(mobatk*defendpercent)
+dfndatk = defendedattack
+playermisspercent = 15
 playermissprcnt = playermisspercent
-mobmisspercent = 5
+mobmisspercent = 20
 mobmissprcnt = mobmisspercent
+miss = randint(1,100)
+restartb = bool(1)
 
-def playermobatk():
-    global playeratk, weapondmg, mobatk
-    playeratk, weapondmg = randint(1, 20) + randint(1, 20) + randint(1, 30) + weapondmg, 0
-    mobatk = randint(20, 100)
+def playeratk_():
+    global playeratk
+    playeratk = randint(5,30) + randint(5,30) + randint(5,30) + weapondamage
+    
+def mobatkrand():
+    global mobatk
+    mobatk = randint(1,20) + randint(1,20) + randint(2,20)
     
 def mobhpzeronewmob():
-    global mob, mobhp, mobatk
-    mob = choice(moblist)
-    mobhp = 150
-    mobatk = randint(20, 100)
     if mob[0] in ['A', 'E', 'I', 'O', 'U']:
         print("Player has encountered an " + str(mob))
     else:
         print("Player has encountered a " + str(mob))
+        
+def moblistatkhp():
+    global mob
+    global mobhp
+    global moblist
+    mob = choice(moblist)
+    mobhp = 150
+    mobatk = randint(1,20) + randint(1,20) + randint(2,20)
+    
+def weapondamageincrease():
+    global weapondamage, skillweapondamage
+    weapondamage = randint(5,10)
+    skillweapondamage = randint(1,20)
+    
+def skilldmgexpression():
+    global skilldmg, skillpts
+    skilldmg, skillpts = (randint(1,30) + randint(1,30) + randint(1,30)) * (skillpts + 1) + skillweapondamage, 0
+    
+def playerhp_():
+    global playerhp
+    playerhp = 1000
 
 
-equipment = "/equip"
-equip = equipment
+equip = "/equip"
 
 gamemode = "/gamemode", "on"
 
-moblist = ["Dark Beast", "Vampire",]
+moblist = ["Dark Beast", "Vampire", "Dark Gear", "Deranged Lunatic", "Randomizer", "Crondor", "Everclear",]
 mob = choice(moblist)
 
 if mob[0] in ['A', 'E', 'I', 'O', 'U']:
     print("Player has encountered an " + str(mob))
 else:
     print("Player has encountered a " + str(mob))
-print("player has", int(playerhp), "health")
-playerhp = 1000
-while playerhp > 0: 
-    xx = str(input("x for attack, y for defend, z for \'skill\', \'/equip\' for equipment"))
-    if xx in ['x', 'y', 'z', equip]:
-        if xx == str('x'):
-            miss = randint(1,100)
-            if int(miss) > playermissprcnt:
-                playermobatk()
+
+print("Player has", int(playerhp), "health")
+playerhp_()
+print(mob, "has " + str(mobhp), "health")
+while restartb == bool(1):
+# debugging restartb
+#    print("~" + restartb)
+    if mobhp <= 0:
+        moblistatkhp()
+        mobhpzeronewmob()
+    xyz = str(input("x for attack, y for defend, z for \'skill\', \'/equip\' for equipment"))
+    if xyz in ['x', 'y', 'z', equip]:
+        if xyz == 'x':
+            if miss > playermissprcnt:
+                playeratk_()
                 mobhp = mobhp - playeratk
-                print("Player attacked " + str(mob), "for " + str(playeratk), "damage")
-                
-                playerhp = playerhp - mobatk
-                print(str(mob), "attacked player for " + str(mobatk), "damage")
-                print(mob, "has " + str(mobhp), "health")
-                print("player has " + str(playerhp), "health")
-                if mobhp <= 0:
-                    mobhpzeronewmob()
+                print("Player attacks " + str(mob), "for " + str(playeratk), "damage")
+                miss = randint(1, 100)
+                if miss > mobmissprcnt:
+                    mobatkrand()
+                    print(str(mob), "attacks Player for " + str(mobatk), "damage")
+                    playerhp = playerhp - mobatk
+                    miss = randint(1, 100)
+                elif miss <= mobmissprcnt:
+                    print(str(mob), "has missed")
+                    miss = randint(1, 100)
             elif miss <= playermissprcnt:
                 print('Player has missed')
-                mobatk = randint(20, 100)
-                print(str(mob), "attacked player for " + str(mobatk), "damage")
-                playerhp = playerhp - mobatk
-                print(mob, "has " + str(mobhp), "health")
-                print("player has " + str(playerhp), "health")
-                if mobhp <= 0:
-                    mobhpzeronewmob()
-        if xx == str('y'):
+                miss = randint(1, 100)
+                if miss > mobmissprcnt:
+                    mobatkrand()
+                    print(str(mob), "attacks Player for " + str(mobatk), "damage")
+                    playerhp = playerhp - mobatk
+                    miss = randint(1, 100)
+                elif miss <= mobmissprcnt:
+                    print(str(mob), "has missed")
+                    miss = randint(1, 100)
+        if xyz == 'y':
             if skillpts < skillptsmax:
                 skillpts = skillpts + 1
-                print("You have defended and gained a skill point")
-                print("You now have " + str(skillpts), "\'skill\' points")
-                dfnd = round(mobatk*defendpercent)
-                mobatk = randint(20, 100)
-                playerhp = playerhp - dfnd
-                print(str(mob), "attacks player for " + str(dfnd) + ", a small damage")
-                print(mob, "has " + str(mobhp), "health")
-                print("player has", playerhp, "health")
+                print("Player has defended and gained a skill point")
+                print("Player now has " + str(skillpts), "\'skill\' points")
+                dfndatk = round(mobatk*defendpercent)
+                mobatkrand()
+                playerhp = playerhp - dfndatk
+                print(str(mob), "attacks Player for " + str(dfndatk) + ", a small damage")
             elif skillpts >= skillptsmax:
-                print("Max \'skill\' points is " + str(skillptsmax) + ", " + "You are at max already")
-                print(mob, "has " + str(mobhp), "health")
-                print("player has", int(playerhp), "health")
-        if xx == str('z'):
+                print("Max \'skill\' points is " + str(skillptsmax) + ", " + "Player is at max")
+                print("Nothing happened")
+        if xyz == 'z':
             if skillpts > 0:
-                skilldmg, skillpts = (randint(1, 20) + randint(1, 20) + randint(1, 30)) * skillpts + skillweapondmg, 0
+                skilldmgexpression()
 # debugging skilldmg
 #               print("~", skilldmg)
-                print("You attacked " + str(mob), "for " + str(skilldmg), "damage")
+                print("Player attacks " + str(mob), "for " + str(skilldmg), "damage")
                 mobhp = mobhp - skilldmg
 # debugging skilldmg
 #               print("~", skilldmg)
-                print(str(mob), "has " + str(mobhp), "health")
-                print("You now have " + str(skillpts), "\'skill\' points")
-                print("player has", int(playerhp), "health")
-                if mobhp <= 0:
-                    mobhpzeronewmob()
+                print("Player now has " + str(skillpts), "\'skill\' points")
             elif skillpts == 0:
-                print("You have " + str(skillpts), "\'skill\' points")
+                print("Player has " + str(skillpts), "\'skill\' points")
                 print("Nothing happened")
-                print("player has", int(playerhp), "health")
             else:
                 print("\'skill\' points out of bounds")
                 break
-        if str(xx) == str(equip):
-            playeratk, skilldmg = randint(1, 20) + randint(1, 20) + randint(1, 30) + weapondmg, (randint(1, 20) + randint(1, 20) + randint(1, 30)) * (skillpts + 1) + skillweapondmg
-            weapondmg = weapondmg + 50
-            skillweapondmg = skillweapondmg + 100
+        if xyz == equip:
+            weapondamageincrease()
+            print("Player has equipped")
+        print(mob, "has " + str(mobhp), "health")
+        print("Player has " + str(playerhp), "health")
     else:
-        print("typed something else other than x, y, z, /equip")
+        print("typed something else other than x, y, z, equip")
+
+    if playerhp < 1:
+        print('Player died')
+        restart = input('Restart? y/n')
+        while restart != 'y' and restart != 'n':
+            print('Typed something else other than y/n')
+            restart = input('Restart? y/n')
+        if restart == 'y':
+            restartb = bool(1)
+            print('Game restarts..')
+            playerhp_()
+            print("Player has", int(playerhp), "health")
+            print(mob, "has " + str(mobhp), "health")
+        else:
+            print('Game ends')
+            restartb = bool([])
